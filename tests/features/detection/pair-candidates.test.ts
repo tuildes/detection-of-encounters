@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { pairCandidates } from "../../../src/features/detection/pair-candidates.js";
-import type { Monitored } from "../../../src/features/detection/models/monitored.js";
-import type { Position } from "../../../src/features/detection/models/position.js";
+import type { Monitored } from "@/features/detection/models/monitored.js";
+import type { Position } from "@/features/detection/models/position.js";
+import { pairCandidates } from "@/features/detection/pair-candidates.js";
 
 function position(
     id: number,
@@ -42,7 +42,7 @@ describe("pairCandidates", () => {
 
     it("does not emit a pair with itself or reversed duplicates", () => {
         const a = position(1, 0, 0);
-        const b = position(2, 0, 0.00001); // ~1.1 m
+        const b = position(2, 0, 0.00001);
 
         const candidates = pairCandidates([a, b]);
 

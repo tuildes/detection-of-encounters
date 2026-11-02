@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseDataLine, splitDatasetFields } from "../../../src/features/detection/parse-dataset.js";
+import {
+    parseDataLine,
+    splitDatasetFields,
+} from "@/features/detection/parse-dataset.js";
 
 describe("splitDatasetFields", () => {
     it("splits semicolon fields and strips quotes", () => {
@@ -9,7 +12,13 @@ describe("splitDatasetFields", () => {
         );
 
         assert.deepEqual(fields, [
-            "9", "", "2024-01-01 00:00:00", "1.64046", "-69.53947", "true", "10",
+            "9",
+            "",
+            "2024-01-01 00:00:00",
+            "1.64046",
+            "-69.53947",
+            "true",
+            "10",
         ]);
     });
 });
@@ -17,7 +26,9 @@ describe("splitDatasetFields", () => {
 describe("parseDataLine", () => {
     it("maps a regular monitored row", () => {
         const position = parseDataLine(
-            '7;1;"2024-01-01 00:00:00";-13.06443;-46.56289;false;', 8, "fixture.txt",
+            '7;1;"2024-01-01 00:00:00";-13.06443;-46.56289;false;',
+            8,
+            "fixture.txt",
         );
 
         assert.deepEqual(position, {
@@ -35,7 +46,9 @@ describe("parseDataLine", () => {
 
     it("maps a protective-measure row with restriction ids", () => {
         const position = parseDataLine(
-            '9;;"2024-01-01 00:00:00";1.64046;-69.53947;true;"10"', 10, "fixture.txt",
+            '9;;"2024-01-01 00:00:00";1.64046;-69.53947;true;"10"',
+            10,
+            "fixture.txt",
         );
 
         assert.equal(position.monitored.factionId, null);

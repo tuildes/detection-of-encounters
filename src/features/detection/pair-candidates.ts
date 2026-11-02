@@ -1,5 +1,5 @@
-import { ENCOUNTER_RADIUS_METERS } from "../../shared/constants.js";
-import { haversineMeters } from "../../shared/haversine.js";
+import { ENCOUNTER_RADIUS_METERS } from "@/shared/constants.js";
+import { haversineMeters } from "@/shared/haversine.js";
 import type { Position } from "./models/position.js";
 
 export interface EncounterCandidate {

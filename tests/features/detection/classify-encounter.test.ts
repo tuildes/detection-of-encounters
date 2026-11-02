@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { classifyEncounter } from "../../../src/features/detection/classify-encounter.js";
-import { EncounterType } from "../../../src/features/detection/models/encounter.js";
-import type { Monitored } from "../../../src/features/detection/models/monitored.js";
+import { classifyEncounter } from "@/features/detection/classify-encounter.js";
+import { EncounterType } from "@/features/detection/models/encounter.js";
+import type { Monitored } from "@/features/detection/models/monitored.js";
 
 function monitored(partial: Partial<Monitored> & Pick<Monitored, "id">): Monitored {
     return {

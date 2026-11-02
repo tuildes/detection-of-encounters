@@ -2,18 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, it } from "node:test";
-import { fileURLToPath } from "node:url";
-import { detectEncounters } from "../../../src/features/detection/detect-encounters.js";
-import { EncounterType } from "../../../src/features/detection/models/encounter.js";
-import type { Encounter } from "../../../src/features/detection/models/encounter.js";
-import type { Monitored } from "../../../src/features/detection/models/monitored.js";
-import type { Position } from "../../../src/features/detection/models/position.js";
-import { parseDataset } from "../../../src/features/detection/parse-dataset.js";
-
-const repoRoot = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "../../..",
-);
+import { detectEncounters } from "@/features/detection/detect-encounters.js";
+import { EncounterType } from "@/features/detection/models/encounter.js";
+import type { Encounter } from "@/features/detection/models/encounter.js";
+import type { Monitored } from "@/features/detection/models/monitored.js";
+import type { Position } from "@/features/detection/models/position.js";
+import { parseDataset } from "@/features/detection/parse-dataset.js";
+import { REPO_ROOT } from "@/shared/repo-root.js";
 
 function position(
     id: number,
@@ -81,11 +76,11 @@ describe("detectEncounters", () => {
 
     it("matches respostas1.json for dataset1", async () => {
         const positions = await parseDataset(
-            path.join(repoRoot, "data/inputs/dataset1.txt"),
+            path.join(REPO_ROOT, "data/inputs/dataset1.txt"),
         );
         const expected = JSON.parse(
             await readFile(
-                path.join(repoRoot, "data/expected/respostas1.json"),
+                path.join(REPO_ROOT, "data/expected/respostas1.json"),
                 "utf8",
             ),
         ) as OfficialEncounter[];

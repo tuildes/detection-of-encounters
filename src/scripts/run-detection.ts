@@ -1,27 +1,26 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import {
     detectEncounters,
     parseDataset,
     writeEncountersJson,
-} from "../features/detection/index.js";
-
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..",);
+} from "@/features/detection/index.js";
+import { REPO_ROOT } from "@/shared/repo-root.js";
 
 async function main(): Promise<void> {
-    const args = process.argv.slice(2).filter((arg) => arg !== "--");
-    const inputArg = args[0];
+    const inputArg = process.argv[2];
     if (!inputArg) {
         console.error(
-            "Usage: pnpm detect -- <input.txt> [output.json]\n" +
-                "Example: pnpm detect -- data/inputs/dataset1.txt",
+            "Usage: pnpm detect <input.txt> [output.json]\n" +
+                "Example: pnpm detect data/inputs/dataset1.txt",
         );
         process.exitCode = 1;
         return;
     }
 
     const inputPath = path.resolve(inputArg);
-    const outputPath = path.resolve(args[1] ?? defaultOutputPath(inputPath));
+    const outputPath = path.resolve(
+        process.argv[3] ?? defaultOutputPath(inputPath),
+    );
 
     const startedAt = performance.now();
     const positions = await parseDataset(inputPath);
@@ -38,7 +37,7 @@ async function main(): Promise<void> {
 
 function defaultOutputPath(inputPath: string): string {
     const baseName = path.basename(inputPath, path.extname(inputPath));
-    return path.join(repoRoot, "output", `${baseName}.json`);
+    return path.join(REPO_ROOT, "output", `${baseName}.json`);
 }
 
 main().catch((error: unknown) => {
