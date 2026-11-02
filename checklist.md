@@ -50,15 +50,15 @@
 - [x] `classify-encounter.ts` (priority to confirm against expected)
 - [x] `pair-candidates.ts` (brute force + distance filter; TODO spatial grid)
 - [x] `detect-encounters.ts` (groupByTimestamp → pairCandidates → classify)
-- [ ] `write-encounters-json.ts`
-- [ ] `index.ts` (public API)
+- [x] `write-encounters-json.ts`
+- [x] `index.ts` (public API)
   - Aceite: processa `dataset1` e gera JSON no formato do enunciado
 
 ---
 
 ## 6. Run scripts
 
-- [ ] `scripts/run-detection.ts` (`data/inputs` → `output/` + timing)
+- [x] `scripts/run-detection.ts` (`data/inputs` → `output/` + timing)
 - [ ] `scripts/run-validation.ts` (detection + expected → score)
   - Aceite: CLI documentável no README; imprime tempo de execução
 
