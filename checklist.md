@@ -49,7 +49,7 @@
 - [x] `parse-dataset.ts` (`;`, quotes, empty faction, `idsRestricaoMedida`)
 - [x] `classify-encounter.ts` (priority to confirm against expected)
 - [x] `pair-candidates.ts` (brute force + distance filter; TODO spatial grid)
-- [ ] `detect-encounters.ts` (group by timestamp → pairs &lt; 20 m)
+- [x] `detect-encounters.ts` (groupByTimestamp → pairCandidates → classify)
 - [ ] `write-encounters-json.ts`
 - [ ] `index.ts` (public API)
   - Aceite: processa `dataset1` e gera JSON no formato do enunciado
