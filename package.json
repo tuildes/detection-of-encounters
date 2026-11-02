@@ -4,11 +4,13 @@
   "private": true,
   "description": "Spacecom Trainee Tech challenge — encounter detection from geolocation datasets",
   "type": "module",
+  "packageManager": "pnpm@12.11.2",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
     "detect": "tsx src/scripts/run-detection.ts",
     "validate": "tsx src/scripts/run-validation.ts"
   },

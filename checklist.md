@@ -12,9 +12,10 @@
 
 ## 1. Setup do projeto
 
-- [x] `package.json` + scripts npm (`detect`, `validate`, `typecheck`)
-- [x] `tsconfig.json` (TypeScript estrito, NodeNext)
-- [x] Dev deps: `typescript`, `tsx`, `@types/node`
+- [x] `package.json` + scripts pnpm (`detect`, `validate`, `typecheck`, `test`)
+- [x] `tsconfig.json` (TypeScript estrito, NodeNext; inclui `tests/`)
+- [x] Dev deps: `typescript`, `tsx`, `@types/node` (package manager: pnpm)
+- [x] `node:test` + `tests/` espelhando `src/` (smoke: `haversine.test.ts`)
 - [x] Atualizar `.gitignore` (`node_modules`, datasets 3–7, `output/*`, `dist/`)
 
 ---
@@ -29,8 +30,7 @@
 ## 3. Feature `shared`
 
 - [x] `constants.ts` (`EARTH_RADIUS_METERS`, `ENCOUNTER_RADIUS_METERS`)
-- [ ] `haversine.ts` with `R = 6_371_000`
-  - Aceite: distância conhecida (ex. ponto a ~10 m) bate com tolerância numérica aceitável
+- [x] `haversine.ts` with `R = 6_371_000`
 
 ---
 
