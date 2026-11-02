@@ -38,10 +38,9 @@
 
 > Código e nomes de arquivos em **inglês**. Campos do JSON de output seguem o contrato do enunciado (`tipo`, `monitoradosEncontro`, `posicoes`, `distanciaMetros`).
 
-- [ ] `models/monitored.ts`
-- [ ] `models/position.ts`
-- [ ] `models/encounter.ts` (type, pair, timestamp, positions, distanceMeters → serializa no schema oficial)
-  - Aceite: tipos alinhados ao formato de output do enunciado
+- [x] `models/monitored.ts`
+- [x] `models/position.ts`
+- [x] `models/encounter.ts` (type, pair, timestamp, positions, distanceMeters → serializa no schema oficial)
 
 ---
 
