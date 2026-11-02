@@ -12,10 +12,10 @@
 
 ## 1. Setup do projeto
 
-- [x] `package.json` + scripts pnpm (`detect`, `validate`, `typecheck`, `test`)
-- [x] `tsconfig.json` (TypeScript estrito, NodeNext; inclui `tests/`)
+- [x] `package.json` + scripts pnpm (`detect`, `typecheck`, `test`)
+- [x] `tsconfig.json` (TypeScript estrito, NodeNext; inclui `tests/`; alias `@/*`)
 - [x] Dev deps: `typescript`, `tsx`, `@types/node` (package manager: pnpm)
-- [x] `node:test` + `tests/` espelhando `src/` (smoke: `haversine.test.ts`)
+- [x] `node:test` + `tests/` espelhando `src/`
 - [x] Atualizar `.gitignore` (`node_modules`, datasets 3–7, `output/*`, `dist/`)
 
 ---
@@ -31,6 +31,7 @@
 
 - [x] `constants.ts` (`EARTH_RADIUS_METERS`, `ENCOUNTER_RADIUS_METERS`)
 - [x] `haversine.ts` with `R = 6_371_000`
+- [x] `repo-root.ts`
 
 ---
 
@@ -40,57 +41,39 @@
 
 - [x] `models/monitored.ts`
 - [x] `models/position.ts`
-- [x] `models/encounter.ts` (type, pair, timestamp, positions, distanceMeters → serializa no schema oficial)
+- [x] `models/encounter.ts`
 
 ---
 
 ## 5. Feature `detection` — core
 
-- [x] `parse-dataset.ts` (`;`, quotes, empty faction, `idsRestricaoMedida`)
-- [x] `classify-encounter.ts` (priority to confirm against expected)
-- [x] `pair-candidates.ts` (brute force + distance filter; TODO spatial grid)
-- [x] `detect-encounters.ts` (groupByTimestamp → pairCandidates → classify)
+- [x] `parse-dataset.ts`
+- [x] `classify-encounter.ts`
+- [x] `pair-candidates.ts` (brute force + distance filter)
+- [x] `detect-encounters.ts`
 - [x] `write-encounters-json.ts`
 - [x] `index.ts` (public API)
-  - Aceite: processa `dataset1` e gera JSON no formato do enunciado
+- [x] `scripts/run-detection.ts`
 
 ---
 
-## 6. Run scripts
+## 7. Performance (próximo foco)
 
-- [x] `scripts/run-detection.ts` (`data/inputs` → `output/` + timing)
-- [ ] `scripts/run-validation.ts` (detection + expected → score)
-  - Aceite: CLI documentável no README; imprime tempo de execução
-
----
-
-## 7. Feature `validation`
-
-- [ ] `models/score-report.ts` (`ec`, `ei`, `score`, extras)
-- [ ] `match-encounters.ts` (normalized pair + float tolerance)
-- [ ] `load-expected-json.ts`
-- [ ] `validate-against-expected.ts`
-- [ ] `index.ts`
-  - Aceite: **dataset1 e dataset2** com `ei = 0` e todos os expected encontrados (`ec` completo)
+- [ ] Grade espacial (ou equivalente) em `pair-candidates` / por timestamp
+- [ ] Revisar memória nos datasets 6–7 (evitar OOM)
+  - Aceite: 3–5 rápidos; 6–7 completam com tempo mensurável
 
 ---
 
-## 8. Performance
+## 8. Outputs oficiais
 
-- [ ] Streaming / leitura eficiente
-- [ ] Grade espacial (ou equivalente) para timestamps com muitos pontos
-  - Aceite: datasets 3–5 em tempo razoável; 6–7 sem OOM e com tempo mensurável
-
----
-
-## 9. Outputs oficiais
-
-- [ ] Gerar JSON para datasets 3–7 (e 1–2 se desejado na entrega)
+- [x] `output/dataset1.json` (smoke)
+- [ ] Gerar JSON para datasets 1–7
   - Aceite: arquivos em `output/` prontos para o zip
 
 ---
 
-## 10. Entrega
+## 9. Entrega
 
 - [ ] `README.md` (lógica, arquitetura, como rodar, por que a abordagem)
 - [ ] Empacotar código + outputs (`.zip` ou link)

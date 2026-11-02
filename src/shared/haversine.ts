@@ -8,7 +8,6 @@ export function haversineMeters(
     lat1: number, lon1: number,
     lat2: number, lon2: number,
 ): number {
-  
     const phi1 = toRadians(lat1);
     const phi2 = toRadians(lat2);
 
@@ -18,10 +17,14 @@ export function haversineMeters(
     const sinHalfDeltaPhi = Math.sin(deltaPhi / 2);
     const sinHalfDeltaLambda = Math.sin(deltaLambda / 2);
 
-    const a = ((sinHalfDeltaPhi * sinHalfDeltaPhi) +
-        (Math.cos(phi1) * Math.cos(phi2) * sinHalfDeltaLambda * sinHalfDeltaLambda));
+    const a =
+        sinHalfDeltaPhi * sinHalfDeltaPhi +
+        Math.cos(phi1) *
+            Math.cos(phi2) *
+            sinHalfDeltaLambda *
+            sinHalfDeltaLambda;
 
-    const c = (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    const c = 2 * Math.asin(Math.min(1, Math.sqrt(a)));
 
-    return (EARTH_RADIUS_METERS * c);
+    return EARTH_RADIUS_METERS * c;
 }
