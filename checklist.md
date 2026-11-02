@@ -48,7 +48,7 @@
 
 - [x] `parse-dataset.ts` (`;`, quotes, empty faction, `idsRestricaoMedida`)
 - [x] `classify-encounter.ts` (priority to confirm against expected)
-- [ ] `pair-candidates.ts` (brute force per timestamp first)
+- [x] `pair-candidates.ts` (brute force + distance filter; TODO spatial grid)
 - [ ] `detect-encounters.ts` (group by timestamp → pairs &lt; 20 m)
 - [ ] `write-encounters-json.ts`
 - [ ] `index.ts` (public API)
