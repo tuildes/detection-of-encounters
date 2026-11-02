@@ -1,0 +1,20 @@
+{
+  "name": "detection-of-encounters",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Spacecom Trainee Tech challenge — encounter detection from geolocation datasets",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "detect": "tsx src/scripts/run-detection.ts",
+    "validate": "tsx src/scripts/run-validation.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

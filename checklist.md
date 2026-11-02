@@ -1,7 +1,5 @@
 # Checklist — Detecção de Encontros
 
----
-
 ## 0. Documentação e estrutura
 
 - [x] `specification.md` a partir do enunciado
@@ -14,23 +12,24 @@
 
 ## 1. Setup do projeto
 
-- [ ] `package.json` + scripts npm (`detect`, `validate`)
-- [ ] `tsconfig.json` (TypeScript estrito, Node)
-- [ ] Dev deps: `typescript`, `tsx`
-- [ ] Atualizar `.gitignore` (`node_modules`, datasets grandes, etc.)
+- [x] `package.json` + scripts npm (`detect`, `validate`, `typecheck`)
+- [x] `tsconfig.json` (TypeScript estrito, NodeNext)
+- [x] Dev deps: `typescript`, `tsx`, `@types/node`
+- [x] Atualizar `.gitignore` (`node_modules`, datasets 3–7, `output/*`, `dist/`)
 
 ---
 
 ## 2. Dados offline
 
-- [ ] Baixar `dataset1.txt` … `dataset7.txt` → `data/inputs/`
-- [ ] Baixar `respostas1.json`, `respostas2.json` → `data/expected/`
+- [x] Baixar `dataset1.txt` ate `dataset7.txt` → `data/inputs/`
+- [x] Baixar `respostas1.json`, `respostas2.json` → `data/expected/`
 
 ---
 
 ## 3. Feature `shared`
 
-- [ ] `haversine.ts` com `R = 6_371_000`
+- [x] `constants.ts` (`EARTH_RADIUS_METERS`, `ENCOUNTER_RADIUS_METERS`)
+- [ ] `haversine.ts` with `R = 6_371_000`
   - Aceite: distância conhecida (ex. ponto a ~10 m) bate com tolerância numérica aceitável
 
 ---

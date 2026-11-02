@@ -136,3 +136,13 @@ dist
 
 # SvelteKit build / generate output
 .svelte-kit
+
+# Project outputs and large challenge datasets
+output/*
+!output/.gitkeep
+data/inputs/dataset3.txt
+data/inputs/dataset4.txt
+data/inputs/dataset5.txt
+data/inputs/dataset6.txt
+data/inputs/dataset7.txt
+dist/
