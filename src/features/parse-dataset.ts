@@ -6,13 +6,7 @@ import type { Position } from "./models/position.js";
 const EXPECTED_HEADER =
     "idMonitorado;faccaoMonitorado;timestamp;latitude;longitude;medidaProtetiva;idsRestricaoMedida";
 
-/**
- * Stream positions grouped by timestamp (file must be ordered by timestamp).
- * Yields one bucket at a time so callers can process and discard.
- */
-export async function* iterateTimestampBuckets(
-    filePath: string,
-): AsyncGenerator<Position[], void, void> {
+export async function* iterateTimestampBuckets(filePath: string): AsyncGenerator<Position[], void, void> {
     let isHeader = true;
     let lineNumber = 0;
     let bucket: Position[] = [];
@@ -70,7 +64,6 @@ export async function* iterateTimestampBuckets(
     }
 }
 
-/** Loads the full file into memory — prefer iterateTimestampBuckets / detectEncountersFromDataset. */
 export async function parseDataset(filePath: string): Promise<Position[]> {
     const positions: Position[] = [];
     for await (const bucket of iterateTimestampBuckets(filePath)) {
