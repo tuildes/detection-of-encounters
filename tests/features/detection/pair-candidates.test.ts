@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Monitored } from "@/features/detection/models/monitored.js";
 import type { Position } from "@/features/detection/models/position.js";
-import { pairCandidates } from "@/features/detection/pair-candidates.js";
+import { pairCandidatesBruteForce } from "@/features/detection/pair-candidates.js";
 
 function position(
     id: number,
@@ -24,13 +24,13 @@ function position(
     };
 }
 
-describe("pairCandidates", () => {
+describe("pairCandidatesBruteForce", () => {
     it("returns only pairs strictly closer than 20 meters", () => {
         const closeA = position(4, -31.93195, -40.61438);
         const closeB = position(6, -31.93187, -40.61435);
         const far = position(1, -25.59386, -73.96319);
 
-        const candidates = pairCandidates([closeA, closeB, far]);
+        const candidates = pairCandidatesBruteForce([closeA, closeB, far]);
 
         assert.equal(candidates.length, 1);
         assert.deepEqual(
@@ -44,7 +44,7 @@ describe("pairCandidates", () => {
         const a = position(1, 0, 0);
         const b = position(2, 0, 0.00001);
 
-        const candidates = pairCandidates([a, b]);
+        const candidates = pairCandidatesBruteForce([a, b]);
 
         assert.equal(candidates.length, 1);
         assert.equal(candidates[0]!.a.monitored.id, 1);
@@ -52,7 +52,7 @@ describe("pairCandidates", () => {
     });
 
     it("returns no candidates when everyone is far apart", () => {
-        const candidates = pairCandidates([
+        const candidates = pairCandidatesBruteForce([
             position(1, 0, 0),
             position(2, 1, 1),
             position(3, -1, -1),

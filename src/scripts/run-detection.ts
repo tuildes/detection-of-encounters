@@ -1,7 +1,6 @@
 import path from "node:path";
 import {
-    detectEncounters,
-    parseDataset,
+    detectEncountersFromDataset,
     writeEncountersJson,
 } from "@/features/detection/index.js";
 import { REPO_ROOT } from "@/shared/repo-root.js";
@@ -23,16 +22,18 @@ async function main(): Promise<void> {
     );
 
     const startedAt = performance.now();
-    const positions = await parseDataset(inputPath);
-    const encounters = detectEncounters(positions);
+    const { encounters, positionCount, bucketSize, timestampCount } =
+        await detectEncountersFromDataset(inputPath);
     await writeEncountersJson(outputPath, encounters);
     const elapsedMs = performance.now() - startedAt;
 
-    console.log(`Input:      ${inputPath}`);
-    console.log(`Output:     ${outputPath}`);
-    console.log(`Positions:  ${positions.length}`);
-    console.log(`Encounters: ${encounters.length}`);
-    console.log(`Elapsed:    ${(elapsedMs / 1000).toFixed(3)}s`);
+    console.log(`Input:       ${inputPath}`);
+    console.log(`Output:      ${outputPath}`);
+    console.log(`Positions:   ${positionCount}`);
+    console.log(`Timestamps:  ${timestampCount}`);
+    console.log(`Bucket size: ${bucketSize}`);
+    console.log(`Encounters:  ${encounters.length}`);
+    console.log(`Elapsed:     ${(elapsedMs / 1000).toFixed(3)}s`);
 }
 
 function defaultOutputPath(inputPath: string): string {

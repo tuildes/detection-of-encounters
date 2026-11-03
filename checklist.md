@@ -49,7 +49,7 @@
 
 - [x] `parse-dataset.ts`
 - [x] `classify-encounter.ts`
-- [x] `pair-candidates.ts` (brute force + distance filter)
+- [x] `pair-candidates.ts` → `pairCandidatesBruteForce`
 - [x] `detect-encounters.ts`
 - [x] `write-encounters-json.ts`
 - [x] `index.ts` (public API)
@@ -57,11 +57,30 @@
 
 ---
 
-## 7. Performance (próximo foco)
+## 7. Performance — decisões
 
-- [ ] Grade espacial (ou equivalente) em `pair-candidates` / por timestamp
-- [ ] Revisar memória nos datasets 6–7 (evitar OOM)
-  - Aceite: 3–5 rápidos; 6–7 completam com tempo mensurável
+### Fazer
+
+- **Grade espacial esparsa** como algoritmo principal de pares (`pairCandidates`).
+- **One-pass ordenado por timestamp** (sem `Position[]` global):
+  - Assumir arquivo ordenado por timestamp (validar nos DS 3–7).
+  - Descobrir `N` no **1º** timestamp completo; timestamps seguintes devem fechar com `N` linhas.
+  - Ao mudar o timestamp: processar bucket → acumular só `Encounter`s → liberar bucket.
+  - Bucket incompleto no meio = erro de dados; extras além de `N` = rejeitar/erro explícito.
+- **`Monitored` no bucket (temporário)** — com one-pass, N≈10–120, embutir no snapshot do bucket é ok. Registry global `Map<id, Monitored>` é opcional (organização / lookup de classify), não P0 de RAM.
+- **Tabela N×N de classificação (opcional, barata)**: `classifyEncounter` só depende de atributos estáveis do par → calcular uma vez e reutilizar em todo timestamp. **Não** cachear Haversine (posição muda a cada 5s).
+- **Um algoritmo na API pública**:
+  - Atual → `pairCandidatesBruteForce` (referência / testes de paridade).
+  - Novo → `pairCandidates` (grade espacial esparsa).
+
+### Tasks
+
+- [x] One-pass: `iterateTimestampBuckets` + `detectEncountersFromDataset`; validar `N` após o 1º timestamp
+- [x] `pairCandidatesBruteForce` (rename) + testes
+- [ ] `pairCandidates` grade espacial esparsa + paridade com brute (DS 1–2)
+- [ ] (Opcional) lookup N×N de `EncounterType` por par de ids
+- [ ] Rodar datasets 3–7 medindo tempo / memória
+  - Aceite: 1–2 idênticos ao expected; 3–7 sem OOM; tempos anotados
 
 ---
 
@@ -75,6 +94,6 @@
 
 ## 9. Entrega
 
-- [ ] `README.md` (lógica, arquitetura, como rodar, por que a abordagem)
+- [ ] `README.md` (lógica, arquitetura, como rodar, por que a abordagem — incluir decisões de perf)
 - [ ] Empacotar código + outputs (`.zip` ou link)
 - [ ] Enviar e-mail

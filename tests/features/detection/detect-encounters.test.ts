@@ -2,12 +2,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, it } from "node:test";
-import { detectEncounters } from "@/features/detection/detect-encounters.js";
+import {
+    detectEncounters,
+    detectEncountersFromDataset,
+} from "@/features/detection/detect-encounters.js";
 import { EncounterType } from "@/features/detection/models/encounter.js";
 import type { Encounter } from "@/features/detection/models/encounter.js";
 import type { Monitored } from "@/features/detection/models/monitored.js";
 import type { Position } from "@/features/detection/models/position.js";
-import { parseDataset } from "@/features/detection/parse-dataset.js";
 import { REPO_ROOT } from "@/shared/repo-root.js";
 
 function position(
@@ -74,10 +76,30 @@ describe("detectEncounters", () => {
         assert.equal(encounters[0]!.distanceMeters, 8.895594131622975);
     });
 
-    it("matches respostas1.json for dataset1", async () => {
-        const positions = await parseDataset(
-            path.join(REPO_ROOT, "data/inputs/dataset1.txt"),
+    it("rejects a later timestamp with a different bucket size", () => {
+        assert.throws(
+            () =>
+                detectEncounters([
+                    position(1, "2024-01-01 00:00:00", 0, 0),
+                    position(2, "2024-01-01 00:00:00", 0, 0),
+                    position(1, "2024-01-01 00:00:05", 0, 0),
+                ]),
+            /expected 2/,
         );
+    });
+});
+
+describe("detectEncountersFromDataset", () => {
+    it("matches respostas1.json for dataset1 without a global Position[]", async () => {
+        const { encounters, bucketSize, timestampCount, positionCount } =
+            await detectEncountersFromDataset(
+                path.join(REPO_ROOT, "data/inputs/dataset1.txt"),
+            );
+
+        assert.equal(bucketSize, 10);
+        assert.equal(timestampCount, 500);
+        assert.equal(positionCount, 5000);
+
         const expected = JSON.parse(
             await readFile(
                 path.join(REPO_ROOT, "data/expected/respostas1.json"),
@@ -85,12 +107,10 @@ describe("detectEncounters", () => {
             ),
         ) as OfficialEncounter[];
 
-        const actual = detectEncounters(positions);
-
-        assert.equal(actual.length, expected.length);
+        assert.equal(encounters.length, expected.length);
 
         const actualByKey = new Map(
-            actual.map((encounter) => [
+            encounters.map((encounter) => [
                 encounterKey({
                     type: encounter.type,
                     monitoredIds: encounter.monitoredIds,

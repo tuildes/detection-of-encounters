@@ -8,9 +8,13 @@ export interface EncounterCandidate {
     distanceMeters: number;
 }
 
-// This function implements brute-force
-// In future can be more interesting use a approach like grid/hash
-export function pairCandidates(positions: Position[]): EncounterCandidate[] {
+/**
+ * Brute-force pair search for one timestamp bucket.
+ * Kept as reference / parity baseline for the sparse-grid implementation.
+ */
+export function pairCandidatesBruteForce(
+    positions: Position[],
+): EncounterCandidate[] {
     const candidates: EncounterCandidate[] = [];
 
     for (let i = 0; i < positions.length; i += 1) {
@@ -19,8 +23,10 @@ export function pairCandidates(positions: Position[]): EncounterCandidate[] {
         for (let j = i + 1; j < positions.length; j += 1) {
             const b = positions[j]!;
             const distanceMeters = haversineMeters(
-                a.latitude, a.longitude,
-                b.latitude, b.longitude,
+                a.latitude,
+                a.longitude,
+                b.latitude,
+                b.longitude,
             );
 
             if (distanceMeters < ENCOUNTER_RADIUS_METERS) {
