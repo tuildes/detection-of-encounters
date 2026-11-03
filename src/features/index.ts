@@ -18,6 +18,7 @@ export {
     splitDatasetFields,
 } from "./parse-dataset.js";
 export {
+    pairCandidates,
     pairCandidatesBruteForce,
     type EncounterCandidate,
 } from "./pair-candidates.js";

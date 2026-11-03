@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { EncounterType } from "@/features/detection/models/encounter.js";
-import type { Encounter } from "@/features/detection/models/encounter.js";
+import { EncounterType } from "@/features/models/encounter.js";
+import type { Encounter } from "@/features/models/encounter.js";
 import {
     serializeEncountersJson,
     toOfficialEncounterJson,
-} from "@/features/detection/write-encounters-json.js";
+} from "@/features/write-encounters-json.js";
 
 const sample: Encounter = {
     type: EncounterType.Faction,

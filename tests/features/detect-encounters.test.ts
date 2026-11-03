@@ -5,11 +5,11 @@ import { describe, it } from "node:test";
 import {
     detectEncounters,
     detectEncountersFromDataset,
-} from "@/features/detection/detect-encounters.js";
-import { EncounterType } from "@/features/detection/models/encounter.js";
-import type { Encounter } from "@/features/detection/models/encounter.js";
-import type { Monitored } from "@/features/detection/models/monitored.js";
-import type { Position } from "@/features/detection/models/position.js";
+} from "@/features/detect-encounters.js";
+import { EncounterType } from "@/features/models/encounter.js";
+import type { Encounter } from "@/features/models/encounter.js";
+import type { Monitored } from "@/features/models/monitored.js";
+import type { Position } from "@/features/models/position.js";
 import { REPO_ROOT } from "@/shared/repo-root.js";
 
 function position(

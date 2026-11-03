@@ -2,7 +2,7 @@ import { classifyEncounter } from "./classify-encounter.js";
 import type { Encounter } from "./models/encounter.js";
 import type { Position } from "./models/position.js";
 import { iterateTimestampBuckets } from "./parse-dataset.js";
-import { pairCandidatesBruteForce } from "./pair-candidates.js";
+import { pairCandidates } from "./pair-candidates.js";
 
 export interface DetectEncountersStats {
     encounters: Encounter[];
@@ -116,7 +116,7 @@ function appendBucketEncounters(
     encounters: Encounter[],
     bucket: Position[],
 ): void {
-    for (const candidate of pairCandidatesBruteForce(bucket)) {
+    for (const candidate of pairCandidates(bucket)) {
         encounters.push(
             toEncounter(candidate.a, candidate.b, candidate.distanceMeters),
         );

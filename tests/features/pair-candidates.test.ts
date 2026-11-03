@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { Monitored } from "@/features/detection/models/monitored.js";
-import type { Position } from "@/features/detection/models/position.js";
-import { pairCandidatesBruteForce } from "@/features/detection/pair-candidates.js";
+import type { Monitored } from "@/features/models/monitored.js";
+import type { Position } from "@/features/models/position.js";
+import {
+    pairCandidates,
+    pairCandidatesBruteForce,
+} from "@/features/pair-candidates.js";
+import { iterateTimestampBuckets } from "@/features/parse-dataset.js";
+import { REPO_ROOT } from "@/shared/repo-root.js";
+import path from "node:path";
 
 function position(
     id: number,
@@ -22,6 +28,27 @@ function position(
         latitude,
         longitude,
     };
+}
+
+function candidateKey(candidate: {
+    a: Position;
+    b: Position;
+    distanceMeters: number;
+}): string {
+    const idA = candidate.a.monitored.id;
+    const idB = candidate.b.monitored.id;
+    const [left, right] = idA <= idB ? [idA, idB] : [idB, idA];
+    return `${left}-${right}:${candidate.distanceMeters}`;
+}
+
+function assertSameCandidates(
+    grid: ReturnType<typeof pairCandidates>,
+    brute: ReturnType<typeof pairCandidatesBruteForce>,
+): void {
+    assert.deepEqual(
+        [...grid.map(candidateKey)].sort(),
+        [...brute.map(candidateKey)].sort(),
+    );
 }
 
 describe("pairCandidatesBruteForce", () => {
@@ -59,5 +86,41 @@ describe("pairCandidatesBruteForce", () => {
         ]);
 
         assert.deepEqual(candidates, []);
+    });
+});
+
+describe("pairCandidates (spatial grid)", () => {
+    it("matches brute force on a mixed near/far bucket", () => {
+        const bucket = [
+            position(4, -31.93195, -40.61438),
+            position(6, -31.93187, -40.61435),
+            position(1, -25.59386, -73.96319),
+            position(7, -13.02054, -46.40609, { factionId: 1 }),
+            position(8, -13.02046, -46.40609, { factionId: 1 }),
+        ];
+
+        assertSameCandidates(pairCandidates(bucket), pairCandidatesBruteForce(bucket));
+    });
+
+    it("matches brute force across every timestamp bucket of dataset1", async () => {
+        for await (const bucket of iterateTimestampBuckets(
+            path.join(REPO_ROOT, "data/inputs/dataset1.txt"),
+        )) {
+            assertSameCandidates(
+                pairCandidates(bucket),
+                pairCandidatesBruteForce(bucket),
+            );
+        }
+    });
+
+    it("matches brute force across every timestamp bucket of dataset2", async () => {
+        for await (const bucket of iterateTimestampBuckets(
+            path.join(REPO_ROOT, "data/inputs/dataset2.txt"),
+        )) {
+            assertSameCandidates(
+                pairCandidates(bucket),
+                pairCandidatesBruteForce(bucket),
+            );
+        }
     });
 });

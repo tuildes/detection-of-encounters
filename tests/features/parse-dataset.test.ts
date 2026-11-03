@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 import {
     parseDataLine,
     splitDatasetFields,
-} from "@/features/detection/parse-dataset.js";
+} from "@/features/parse-dataset.js";
 
 describe("splitDatasetFields", () => {
     it("splits semicolon fields and strips quotes", () => {

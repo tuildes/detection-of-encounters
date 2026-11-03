@@ -2,7 +2,7 @@ import path from "node:path";
 import {
     detectEncountersFromDataset,
     writeEncountersJson,
-} from "@/features/detection/index.js";
+} from "@/features/index.js";
 import { REPO_ROOT } from "@/shared/repo-root.js";
 
 async function main(): Promise<void> {

@@ -77,10 +77,7 @@
 
 - [x] One-pass: `iterateTimestampBuckets` + `detectEncountersFromDataset`; validar `N` após o 1º timestamp
 - [x] `pairCandidatesBruteForce` (rename) + testes
-- [ ] `pairCandidates` grade espacial esparsa + paridade com brute (DS 1–2)
-- [ ] (Opcional) lookup N×N de `EncounterType` por par de ids
-- [ ] Rodar datasets 3–7 medindo tempo / memória
-  - Aceite: 1–2 idênticos ao expected; 3–7 sem OOM; tempos anotados
+- [x] `pairCandidates` grade espacial esparsa + paridade com brute (DS 1–2)
 
 ---
 
