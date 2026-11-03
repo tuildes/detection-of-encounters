@@ -1,7 +1,7 @@
 # Detecção de Encontros
 
 Solução em **TypeScript / Node.js** para o desafio técnico do **Programa Trainee Tech Spacecom 2027**:
-Faz o processamento de geolocalizações e detecção de encontros físicos entre monitorados (tornozeleiras) e vítimas (medidas protetivas).
+processa geolocalizações e detecta encontros físicos entre monitorados (tornozeleiras) e vítimas (medidas protetivas).
 
 ## Como executar
 
@@ -22,7 +22,7 @@ pnpm detect data/inputs/dataset1.txt
 
 ### Exemplo de saída
 
-No `stdin` exibe algumas informações relevantes da execução de detecção, como tempo, encontros do resultante e tamanho do bucket (usado para otimização)
+No `stdout`, o comando exibe informações relevantes da execução (tempo, quantidade de encontros e tamanho do bucket, usado na otimização).
 
 ```text
 Input:       $HOME/detection-of-encounters/data/inputs/dataset1.txt
@@ -49,11 +49,11 @@ Ele baixa:
 | Destino | Arquivos |
 | --- | --- |
 | `data/inputs/` | `dataset1.txt` … `dataset7.txt` |
-| `data/expected/` | `respostas1.json`, `respostas2.json` (resposta esperada do dataset 1 e 2) |
+| `data/expected/` | `respostas1.json`, `respostas2.json` (respostas esperadas dos datasets 1 e 2) |
 
 ## Estrutura do repositório
 
-O repositório é organizado em features e núcleos de código, como `data/`, `src` e `tests`, sendo esse uma mímica da pasta sources para testes unitárias de função
+O repositório é organizado em pastas como `data/`, `src/` e `tests/`. A pasta `tests/` espelha a estrutura de `src/` para os testes unitários.
 
 ```text
 detection-of-encounters/
@@ -88,8 +88,8 @@ Monólito modular **leve**, organizado por responsabilidade (sem framework):
 | Camada | Papel |
 | --- | --- |
 | `shared/` | utilitários puros (Haversine e constantes) |
-| `features/` | Funções com funcionalidades únicas do desafio |
-| `scripts/` | Funções úteis do CLI |
+| `features/` | regras e funções específicas do desafio |
+| `scripts/` | entrypoints do CLI |
 | `tests/` | testes unitários / integração local |
 
 Convenções:
@@ -100,20 +100,20 @@ Convenções:
 
 ## Lógica / fluxo
 
-1. **Leitura one-pass**
-   O arquivo é percorrido em stream, assumindo ordenação por `timestamp` (usado para evitar perda de desempenho em RAM/tempo para agrupar).
+1. **Leitura one-pass**  
+   O arquivo é percorrido em stream, assumindo ordenação por `timestamp` (evita custo de RAM/tempo ao agrupar o dataset inteiro de uma vez).  
    Ao fechar o primeiro timestamp, define-se `N` (pessoas por instante). Timestamps seguintes devem ter exatamente `N` linhas.
 
-2. **Pares candidatos (grade espacial)**
-   Em cada bucket, posições vão para células de ~20m. Só se comparam pontos na mesma célula ou nas 8 vizinhas; a distância final usa **Haversine** com `R = 6_371_000` m. Encontro se `distância < 20`.
+2. **Pares candidatos (grade espacial)**  
+   Em cada bucket, posições vão para células de ~20 m. Só se comparam pontos na mesma célula ou nas 8 vizinhas; a distância final usa **Haversine** com `R = 6_371_000` m. Encontro se `distância < 20`.
 
-3. **Classificação**
+3. **Classificação**  
    Para cada par próximo:
    - `protetiva` — um lista o outro em `idsRestricaoMedida`
    - `faccao` — mesma `factionId` não nula
    - `generico` — demais casos
 
-4. **Serialização**
+4. **Serialização**  
    Modelo interno em inglês → JSON oficial (`tipo`, `monitoradosEncontro`, …).
 
 Referência de pares: `pairCandidatesBruteForce` permanece no código para testes de paridade com o grid.
@@ -122,9 +122,9 @@ Referência de pares: `pairCandidatesBruteForce` permanece no código para teste
 
 | Decisão | Motivo |
 | --- | --- |
-| **One-pass por timestamp** (sem `Position[]` global) | Datasets 6 e 7 têm milhões de linhas, manter tudo em RAM estouraria a memória, então só o bucket atual e a lista de encontros ficam armazenados. |
-| **Grade espacial esparsa** | Brute-force é O(N²) por timestamp (`N` chega a 120). O grid reduz Haversines aos vizinhos geográficos, evitando comparações de distâncias muito grandes nos timestamps, cortando quase metade do ambiente de busca. |
-| **`N` fixo validado** | Nos datasets, cada timestamp tem mesmo número de entradas por isso é usado para evitara grupamento, mas validar cedo falha rápido se o input quebrar a premissa. |
+| **One-pass por timestamp** (sem `Position[]` global) | Datasets 6 e 7 têm milhões de linhas; manter tudo em RAM estouraria a memória, então só o bucket atual e a lista de encontros ficam armazenados. |
+| **Grade espacial esparsa** | Brute-force é O(N²) por timestamp (`N` chega a 120). O grid reduz Haversines aos vizinhos geográficos, evitando comparações entre pontos muito distantes. |
+| **`N` fixo validado** | Nos datasets, cada timestamp tem o mesmo número de entradas; isso evita um agrupamento genérico mais caro e, se a premissa quebrar, a validação falha cedo. |
 
 Baseline de força bruta foi mantido só para validar que o grid encontra o **mesmo** conjunto de pares.
 
@@ -142,7 +142,7 @@ Todos os 7 datasets foram executados. Tempos medidos localmente (máquina de des
 | 6 | 8 000 000 | 80 000 | 100 | 27 | 16 s | `output/dataset6.json` |
 | 7 | 12 000 000 | 100 000 | 120 | 35 | 25 s | `output/dataset7.json` |
 
-Validação local: `dataset1` e `dataset2` conferem com `data/expected/respostas1.json` e `respostas2.json` (conteúdo JSON idêntico pelo diff do Linux/macOS).
+Validação local: `dataset1` e `dataset2` conferem com `data/expected/respostas1.json` e `respostas2.json` (conteúdo JSON idêntico pelo `diff` do Linux/macOS).
 
 ## Testes
 
@@ -164,13 +164,12 @@ Cobertura principal:
 
 ## Uso de IA
 
-O desenvolvimento foi acelerado com **Cursor** (assistente de código). A IA ajudou em scaffolding, refactors e rascunhos de implementação.
-**Todas** as decisões de arquitetura, regras de negócio, revisões de código e escolhas de otimização foram feitas e validadas por mim. O código foi revisado humanamente antes de consolidar cada etapa, além de serem feitas diversos code-reviews e testes unitárias para garantir os resultados.
+O desenvolvimento foi acelerado com **Cursor** (assistente de código). A IA ajudou em scaffolding, refactors e rascunhos de implementação.  
+**Todas** as decisões de arquitetura, regras de negócio, revisões de código e escolhas de otimização foram feitas e validadas por mim. O código foi revisado humanamente antes de consolidar cada etapa, com diversos code reviews e testes unitários para garantir os resultados.
 
 ## Por que esta abordagem
 
 1. **Correção primeiro** — regras do enunciado (mesmo timestamp, Haversine, `< 20 m`, tipos) cobertas por testes contra o gabarito.
 2. **Escala depois** — one-pass + grade espacial permitem processar os datasets grandes sem OOM e com tempo competitivo no critério de desempate.
-3. **Simplicidade defensável** — TypeScript puro, sem framework; um algoritmo público de pares (`pairCandidates`) com brute-force só como referência.
-   - Mantendo apenas o necessário, nada além do software pedido, para evitar perda de desempenho, tanto em memória principal do que tempo de processamento
-5. **Reprodutibilidade** — `pnpm install` + download script + um comando `detect` por arquivo.
+3. **Simplicidade defensável** — TypeScript puro, sem framework; um algoritmo público de pares (`pairCandidates`) com brute-force só como referência. Mantém apenas o necessário, nada além do pedido, para evitar perda de desempenho tanto em memória quanto em tempo de processamento.
+4. **Reprodutibilidade** — `pnpm install` + script de download + um comando `detect` por arquivo.
